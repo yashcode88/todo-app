@@ -1,7 +1,6 @@
 var express = require("express");
 var bodyParser = require("body-parser");
 var _ = require("lodash");
-const config = require("./config/config.json");
 
 var port = process.env.PORT;
 
@@ -76,14 +75,20 @@ app.get("/todos/:id", (req, res) => {
 
 app.delete("/todos/:id", (req, res) => {
 
-    if (!ObjectID.isValid(req.params.id)) {
+    var idToRemove = req.params.id;
+    if (!ObjectID.isValid(idToRemove) && idToRemove != "all") {
         return res.status(404).send({ "error": "Request not valid." });
 
     };
 
-    todos.remove({
-        _id: req.params.id
-    }).then((doc) => {
+    var filterObj = {};
+    if ( idToRemove.toLowerCase() != "all" ){
+        filterObj = {
+            _id: req.params.id
+        };
+    }
+
+    todos.remove(filterObj).then((doc) => {
         if (doc.n == 0) {
             return res.status(404).send({ "error": "Document not found." });
         }
