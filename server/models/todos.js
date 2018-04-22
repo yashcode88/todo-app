@@ -8,12 +8,12 @@ var todos = mongoose.model("todos", {
         trim: true
     },
     completed: {
-        type: Number,
-        default: 0
+        type: Boolean,
+        default: false
     },
     completedAt: {
         type: Date,
-        default: new Date()
+        default: null
     }
 });
 
