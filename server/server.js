@@ -1,6 +1,7 @@
 var express = require("express");
 var bodyParser = require("body-parser");
 var _ = require("lodash");
+const config = require("./config/config.json");
 
 var port = process.env.PORT;
 
