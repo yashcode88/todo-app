@@ -2,7 +2,7 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var _ = require("lodash");
 
-var port = process.env.PORT;
+var port = process.env.PORT || 3000;
 
 const { ObjectID } = require("mongodb");
 const { mongoose } = require("./db/mongoose.js");
@@ -141,8 +141,8 @@ app.patch("/todos/:id", (req, res) => {
 });
 
 
-app.listen(port || 3000, () => {
-    console.log("Server started no port 3000...");
+app.listen(port, () => {
+    console.log(`Server started no port ${port}...`);
 })
 
 module.exports = {
