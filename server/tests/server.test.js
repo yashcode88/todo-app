@@ -29,7 +29,6 @@ beforeEach((done) => {
 })
 
 describe("post/ todos", () => {
-    console.log(cnt())
 
     it("should create a new todo", (done) => {
         var text = "test todo text";
@@ -106,28 +105,22 @@ describe("get/ todos", () => {
             })
     });
 
-    it("should return 400 bad request if invalid id", (done) => {
+    it("should return 404 invalid id", (done) => {
         // var text = "test todo text";
 
         request(app)
             .get(`/todos/${new ObjectID()}`)
-            .expect(400)
-            .end((err, res) => {
-                if (err) return done(err);
-                done();
-            })
+            .expect(404)
+            .end(done)
     });
 
-    it("should return 404 bad request if id not found", (done) => {
+    it("should return 400 bad request if id not found", (done) => {
         // var text = "test todo text";
 
         request(app)
             .get("/todos/5ad3a2642114e")
-            .expect(404)
-            .end((err, res) => {
-                if (err) return done(err);
-                done();
-            })
+            .expect(400)
+            .end(done)
     });
 })
 
@@ -149,14 +142,12 @@ describe("DELETE/ todos", () => {
             })
     })
 
-    it("should return 400", (done) => {
+    it("should return 404", (done) => {
 
         request(app)
             .delete(`/todos/6adad8131daa2228549246ff`)
-            .expect(400)
-            .end((err, res) => {
-                done();
-            });
+            .expect(404)
+            .end(done);
 
     })
 
@@ -165,10 +156,55 @@ describe("DELETE/ todos", () => {
 
         request(app)
             .delete(`/todos/5adad81`)
-            .expect(404)
+            .expect(400)
+            .end(done);
+
+    })
+
+})
+
+
+
+describe("PATCH/ todos", () => {
+    it("should update a todo", (done) => {
+
+        var updateText = "this is updated todo";
+        var hexid = newtodos[0]._id.toHexString();
+        request(app)
+            .patch(`/todos/${hexid}`)
+            .send({
+                text:updateText,
+                completed:false
+            })
+            .expect(200)
             .end((err, res) => {
-                done();
-            });
+                if (err) return done(err);
+
+                todos.findById( hexid , (err, doc) => {
+                    expect(doc.text).toBe(updateText);
+                    expect(doc.completed).toBe(false);
+                    expect(doc.completedAt).toBe(null);
+                    done();
+                });
+            })
+    })
+
+    it("should return 404", (done) => {
+
+        request(app)
+            .patch(`/todos/6adad8131daa2228549246ff`)
+            .expect(404)
+            .end(done);
+
+    })
+
+
+    it("should return not found", (done) => {
+
+        request(app)
+            .patch(`/todos/5adad81`)
+            .expect(400)
+            .end(done);
 
     })
 

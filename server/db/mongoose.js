@@ -2,8 +2,7 @@ const mongoose = require("mongoose");
 
 mongoose.Promise = global.Promise;
 
-var dburl = process.env.DBURL || "mongodb://localhost:27017/ToDoApp";
-mongoose.connect(dburl).then((res) => {
+mongoose.connect(process.env.DBURL).then((res) => {
     // console.log(res)
     console.log("MongoDB connection establised successfully.")
 }).catch((err) => {

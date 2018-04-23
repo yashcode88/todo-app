@@ -1,8 +1,9 @@
+require("./config/config.js");
 var express = require("express");
 var bodyParser = require("body-parser");
 var _ = require("lodash");
 
-var port = process.env.PORT || 3000;
+var port = process.env.PORT;
 
 const { ObjectID } = require("mongodb");
 const { mongoose } = require("./db/mongoose.js");
@@ -53,14 +54,14 @@ app.get("/todos", (req, res) => {
 app.get("/todos/:id", (req, res) => {
 
     if (!ObjectID.isValid(req.params.id)) {
-        res.status(404).send({ "error": "Request not valid." });
+        res.status(400).send({ "error": "Request not valid." });
         return;
     };
     todos.find({
         _id: req.params.id
     }).then((doc) => {
         if (doc.length == 0) {
-            return res.status(400).send({ "error": "Document not found." });
+            return res.status(404).send({ "error": "Document not found." });
         }
         res.send({
             doc
@@ -76,13 +77,13 @@ app.get("/todos/:id", (req, res) => {
 app.delete("/todos/:id", (req, res) => {
 
     var idToRemove = req.params.id;
-    if (!ObjectID.isValid(idToRemove) && idToRemove != "all") {
-        return res.status(404).send({ "error": "Request not valid." });
+    if (!ObjectID.isValid(idToRemove) && idToRemove != "*") {
+        return res.status(400).send({ "error": "Request not valid." });
 
     };
 
     var filterObj = {};
-    if ( idToRemove.toLowerCase() != "all" ){
+    if (idToRemove != "*") {
         filterObj = {
             _id: req.params.id
         };
@@ -107,36 +108,36 @@ app.delete("/todos/:id", (req, res) => {
 app.patch("/todos/:id", (req, res) => {
 
     if (!ObjectID.isValid(req.params.id)) {
-        return res.status(404).send({ "error": "Request not valid." });
+        return res.status(400).send({ "error": "Request not valid." });
 
     };
 
-    var body = _.pick(req.body,["text","completed"])
+    var body = _.pick(req.body, ["text", "completed"])
 
-    if ( _.isBoolean(body.completed) && body.completed ){
+    if (_.isBoolean(body.completed) && body.completed) {
         body.completedAt = new Date();
         body.completed = true;
-    }else{
+    } else {
         body.completedAt = null;
         body.completed = false;
     }
 
     todos.findOneAndUpdate({
         _id: req.params.id
-    },{
-        $set:body
-    },{
-        new:true
-    }).then((doc) => {
-        if (!doc) {
-            return res.status(404).send({ "error": "Document not found." });
-        }
-        res.status(200).send({doc});
-    }, (err) => {
-        res.status(400).send(err);
-    }).catch((err) => {
-        res.status(400).send(err);
-    });
+    }, {
+            $set: body
+        }, {
+            new: true
+        }).then((doc) => {
+            if (!doc) {
+                return res.status(404).send({ "error": "Document not found." });
+            }
+            res.status(200).send({ doc });
+        }, (err) => {
+            res.status(400).send(err);
+        }).catch((err) => {
+            res.status(400).send(err);
+        });
 
 });
 
