@@ -1,4 +1,3 @@
-var cnt = (() => { var i = 0; return () => { return i++ } })()
 const request = require("supertest");
 const expect = require("expect");
 const { ObjectID } = require("mongodb");
@@ -152,7 +151,7 @@ describe("DELETE/ todos", () => {
     })
 
 
-    it("should return not found", (done) => {
+    it("should return 400 for invalid request", (done) => {
 
         request(app)
             .delete(`/todos/5adad81`)
@@ -171,7 +170,7 @@ describe("PATCH/ todos", () => {
         var updateText = "this is updated todo";
         var hexid = newtodos[0]._id.toHexString();
         request(app)
-            .patch(`/todos/${hexid}`)
+            .put(`/todos/${hexid}`)
             .send({
                 text:updateText,
                 completed:false
@@ -192,17 +191,17 @@ describe("PATCH/ todos", () => {
     it("should return 404", (done) => {
 
         request(app)
-            .patch(`/todos/6adad8131daa2228549246ff`)
+            .put(`/todos/6adad8131daa2228549246ff`)
             .expect(404)
             .end(done);
 
     })
 
 
-    it("should return not found", (done) => {
+    it("should return 400 for invalid request", (done) => {
 
         request(app)
-            .patch(`/todos/5adad81`)
+            .put(`/todos/5adad81`)
             .expect(400)
             .end(done);
 
