@@ -11,7 +11,7 @@ module.exports = function (app) {
         var name = file;
         try{
             require('./' + name)(app, _, ObjectID);
-            // console.log('../' + name);
+            console.log('../' + name + " loaded.");
         }catch(e){
             console.log("Exception occured while loading route file '" + name + "' " + e.message)
         }

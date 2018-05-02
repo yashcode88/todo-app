@@ -8,11 +8,18 @@ module.exports = function (app, _, ObjectID) {
         var body = _.pick(req.body, ["email", "password"])
         var newUser = new users(body);
 
+        lineNo();
         newUser.save().then((doc) => {
-            res.send(doc);
+            // res.send(doc);
+            lineNo();
+            return newUser.generateAuthToken();
         }, (err) => {
             // console.log(req);
+            lineNo();
             res.status(400).send(err);
+        }).then((token) => {
+            lineNo();
+            res.header("x-auth",token).send(newUser);
         }).catch((err) => {
             res.status(400).send(err);
         })

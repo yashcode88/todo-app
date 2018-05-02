@@ -1,3 +1,4 @@
+lineNo = function () { console.log(new Error("").stack.split("at ")[2]) }
 require("./config/config.js");
 var express = require("express");
 var bodyParser = require("body-parser");
