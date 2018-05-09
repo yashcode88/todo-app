@@ -1,4 +1,5 @@
 const { users } = require("../models/users.js");
+const { authenticate } = require("../middleware/authenticate.js");
 
 module.exports = function (app, _, ObjectID) {
 
@@ -19,8 +20,9 @@ module.exports = function (app, _, ObjectID) {
             res.status(400).send(err);
         }).then((token) => {
             lineNo();
-            res.header("x-auth",token).send(newUser);
+            return res.header("x-auth", token).send(newUser);
         }).catch((err) => {
+            lineNo();
             res.status(400).send(err);
         })
 
@@ -39,6 +41,11 @@ module.exports = function (app, _, ObjectID) {
             res.status(400).send(err);
         })
 
+    });
+
+    //users GET
+    app.get("/users/me", authenticate , (req, res) => {
+        res.send(req.user);
     });
 
 }

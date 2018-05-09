@@ -4,28 +4,10 @@ const { ObjectID } = require("mongodb");
 
 const { app } = require("./../server.js");
 const { todos } = require("./../models/todos.js");
+const { addNewTodos, addNewUsers, newusers, newtodos } = require("./seed/seed.js");
 
-const newtodos = [
-    {
-        _id: new ObjectID(), "text": "todo1"
-    },
-    {
-        _id: new ObjectID(), "text": "todo2"
-    }
-]
-
-beforeEach((done) => {
-    todos.remove({}).then(() => {
-        return todos.insertMany(newtodos, (error, docs) => {
-            if (error) return done(error);
-        });
-    }).then(() => {
-        done();
-    }).catch((err) => {
-        // console.log(err)
-        done();
-    });
-})
+beforeEach(addNewTodos);
+// beforeEach(addNewUsers);
 
 describe("post/ todos", () => {
 
@@ -172,14 +154,14 @@ describe("PATCH/ todos", () => {
         request(app)
             .put(`/todos/${hexid}`)
             .send({
-                text:updateText,
-                completed:false
+                text: updateText,
+                completed: false
             })
             .expect(200)
             .end((err, res) => {
                 if (err) return done(err);
 
-                todos.findById( hexid , (err, doc) => {
+                todos.findById(hexid, (err, doc) => {
                     expect(doc.text).toBe(updateText);
                     expect(doc.completed).toBe(false);
                     expect(doc.completedAt).toBe(null);
