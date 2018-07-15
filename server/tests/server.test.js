@@ -144,8 +144,6 @@ describe("DELETE/ todos", () => {
 
 })
 
-
-
 describe("PATCH/ todos", () => {
     it("should update a todo", (done) => {
 

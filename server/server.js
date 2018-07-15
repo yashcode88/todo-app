@@ -1,5 +1,5 @@
 lineNo = function () {
-    //console.log(new Error("").stack.split("at ")[2])
+    console.log(new Error("").stack.split("at ")[2])
 }
 require("./config/config.js");
 var express = require("express");
@@ -17,7 +17,7 @@ var app = express();
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
-    console.log(new Date().toDateString() + " : " + req.method + " request for " + req.url);
+    console.log(new Date() + " : " + req.method + " request for " + req.url);
     next();
 });
 
