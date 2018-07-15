@@ -6,8 +6,9 @@ JWT_TOKEN : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YjRiMmMzZTFhZGVmMTA
 
 
 ### API links
-* localhost:3000/list
-* localhost:3000/count
-* localhost:3000/stats
-* localhost:3000/search
-
+* GET https://sheltered-badlands-30983.herokuapp.com/battles
+* GET https://sheltered-badlands-30983.herokuapp.com/count
+* GET https://sheltered-badlands-30983.herokuapp.com/list
+* GET https://sheltered-badlands-30983.herokuapp.com/search
+* GET https://sheltered-badlands-30983.herokuapp.com/stats
+* POST https://sheltered-badlands-30983.herokuapp.com/users/login
